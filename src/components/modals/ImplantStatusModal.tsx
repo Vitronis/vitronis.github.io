@@ -166,7 +166,7 @@ export function ImplantStatusModal({ isOpen, onClose }: ImplantStatusModalProps)
                     stroke="#6B7280"
                     style={{ fontSize: '8px' }}
                     tickLine={false}
-                    domain={[90, 100]}
+                    domain={[0, 100]}
                     unit="%"
                   />
                   <Line 

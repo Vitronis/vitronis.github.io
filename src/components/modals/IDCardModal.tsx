@@ -170,17 +170,11 @@ export function IDCardModal({ isOpen, onClose }: IDCardModalProps) {
             ) : (
               <div className="flex flex-col items-center">
                 <div className="bg-white border-2 border-[#E5E7EB] rounded-lg p-4">
-                  {/* QR Code Placeholder */}
-                  <div className="w-40 h-40 bg-gradient-to-br from-[#000000] to-[#1F2937] flex items-center justify-center">
-                    <div className="grid grid-cols-8 gap-1">
-                      {[...Array(64)].map((_, i) => (
-                        <div
-                          key={i}
-                          className={`w-2 h-2 ${Math.random() > 0.5 ? 'bg-black' : 'bg-white'}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                  <img 
+                    src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https://www.instagram.com/vitronis_official" 
+                    alt="Instagram QR Code"
+                    className="w-40 h-40"
+                  />
                 </div>
                 <p className="text-[9px] text-[#6B7280] mt-2 text-center">
                   Scannen für vollständige medizinische Daten

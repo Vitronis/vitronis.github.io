@@ -65,7 +65,7 @@ export function Profil() {
     setIsEditing(false);
   };
 
-  const openConnectivity = (type: 'wifi' | '6g' | 'bluetooth') => {
+  const openConnectivity = (type: 'wifi' | '5g' | 'bluetooth') => {
     setConnectivityType(type);
     setShowConnectivity(true);
   };

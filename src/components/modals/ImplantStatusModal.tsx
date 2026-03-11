@@ -121,7 +121,7 @@ export function ImplantStatusModal({ isOpen, onClose }: ImplantStatusModalProps)
                     </div>
                   </div>
                   <div className="flex items-center justify-between mt-1">
-                    <span className="text-[9px] text-[#6B7280]">Geschätzte Restlaufzeit: ~3.5 Jahre</span>
+                    <span className="text-[9px] text-[#6B7280]"></span>
                   </div>
                 </div>
               </div>

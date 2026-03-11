@@ -8,20 +8,20 @@ interface ImplantStatusModalProps {
 }
 
 const batteryData24h = [
-  { time: '00:00', value: 98 },
-  { time: '04:00', value: 97 },
-  { time: '08:00', value: 96 },
-  { time: '12:00', value: 95 },
-  { time: '16:00', value: 95 },
+  { time: '00:00', value: 94 },
+  { time: '04:00', value: 94 },
+  { time: '08:00', value: 94 },
+  { time: '12:00', value: 94 },
+  { time: '16:00', value: 94 },
   { time: '20:00', value: 94 },
   { time: '24:00', value: 94 },
 ];
 
 const batteryData7d = [
-  { time: 'Mo', value: 98 },
-  { time: 'Di', value: 97 },
-  { time: 'Mi', value: 96 },
-  { time: 'Do', value: 95 },
+  { time: 'Mo', value: 94 },
+  { time: 'Di', value: 94 },
+  { time: 'Mi', value: 94 },
+  { time: 'Do', value: 94 },
   { time: 'Fr', value: 94 },
   { time: 'Sa', value: 94 },
   { time: 'So', value: 94 },

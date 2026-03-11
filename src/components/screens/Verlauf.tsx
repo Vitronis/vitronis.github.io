@@ -935,7 +935,7 @@ interface VerlaufProps {
 }
 
 export function Verlauf({ onVitalClick }: VerlaufProps) {
-  const [timeRange, setTimeRange] = useState<'24h' | '7d'>('24h');
+  const [timeRange, setTimeRange] = useState<'24h' | '7d'>('7d');
   const [showAnalysis, setShowAnalysis] = useState(false);
 
   return (

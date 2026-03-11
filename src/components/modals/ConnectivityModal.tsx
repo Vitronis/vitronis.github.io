@@ -88,7 +88,7 @@ export function ConnectivityModal({ isOpen, onClose, type }: ConnectivityModalPr
                   </div>
                   <div className="flex justify-between text-[11px]">
                     <span className="text-[#6B7280]">Netzwerk:</span>
-                    <span className="text-[#1F2937]">6G</span>
+                    <span className="text-[#1F2937]">5G</span>
                   </div>
                   <div className="flex justify-between text-[11px]">
                     <span className="text-[#6B7280]">Signalstärke:</span>

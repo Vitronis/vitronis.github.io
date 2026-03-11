@@ -12,7 +12,7 @@ const detailData = {
     title: 'Herzfrequenz',
     color: '#2F80ED',
     unit: ' BPM',
-    currentValue: '58 BPM',
+    currentValue: '72 BPM',
     status: 'Normal',
     statusType: 'normal',
     data24h: [
@@ -59,7 +59,7 @@ const detailData = {
     title: 'Blutdruck',
     color: '#27AE60',
     unit: ' mmHg',
-    currentValue: '113 / 60',
+    currentValue: '120 / 80 mmHg',
     status: 'Normal',
     statusType: 'normal',
     data24h: [
@@ -107,7 +107,7 @@ const detailData = {
     title: 'Sauerstoffsättigung',
     color: '#2F80ED',
     unit: ' %',
-    currentValue: '97,3 %',
+    currentValue: '98 %',
     status: 'Normal',
     statusType: 'normal',
     data24h: [
@@ -318,6 +318,7 @@ export function VitalDetail({ type, onBack }: VitalDetailProps) {
             stroke="#6B7280"
             style={{ fontSize: '8px' }}
             tickLine={false}
+            unit={detail.unit}
           />
           <Line 
             type="monotone" 

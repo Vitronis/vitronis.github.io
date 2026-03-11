@@ -823,6 +823,7 @@ export function Verlauf({ onVitalClick }: VerlaufProps) {
             data={timeRange === '24h' ? bpData24h : bpData7d}
             dataKeys={['systolic', 'diastolic']}
             colors={['#2F80ED', '#27AE60']}
+            unit=" mmHg"
             onClick={() => onVitalClick('blood-pressure')}
           />
 

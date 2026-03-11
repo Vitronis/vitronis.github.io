@@ -333,13 +333,13 @@ export function Profil() {
               </div>
 
               <div 
-                onClick={() => openConnectivity('6g')}
+                onClick={() => openConnectivity('5g')}
                 className="flex items-center justify-between p-2 hover:bg-[#F7F8FA] rounded-lg cursor-pointer transition-colors"
               >
                 <div className="flex items-center gap-2">
                   <Signal size={16} strokeWidth={2} className="text-[#27AE60]" />
                   <div>
-                    <p className="text-[11px] text-[#1F2937]">6G Mobilfunk</p>
+                    <p className="text-[11px] text-[#1F2937]">5G Mobilfunk</p>
                     <p className="text-[9px] text-[#6B7280]">Verbunden</p>
                   </div>
                 </div>

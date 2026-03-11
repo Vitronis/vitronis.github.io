@@ -4,7 +4,7 @@ import { useState } from 'react';
 interface ConnectivityModalProps {
   isOpen: boolean;
   onClose: () => void;
-  type: 'wifi' | '6g' | 'bluetooth';
+  type: 'wifi' | '5g' | 'bluetooth';
 }
 
 export function ConnectivityModal({ isOpen, onClose, type }: ConnectivityModalProps) {
@@ -26,7 +26,7 @@ export function ConnectivityModal({ isOpen, onClose, type }: ConnectivityModalPr
         <div className="sticky top-0 bg-white border-b border-[#E5E7EB] p-4 flex items-center justify-between">
           <h2 className="text-[14px] font-semibold text-[#1F2937]">
             {type === 'wifi' && 'WLAN'}
-            {type === '6g' && '6G Mobilfunk'}
+            {type === '5g' && '5G Mobilfunk'}
             {type === 'bluetooth' && 'Bluetooth'}
           </h2>
           <button
@@ -72,7 +72,7 @@ export function ConnectivityModal({ isOpen, onClose, type }: ConnectivityModalPr
             </>
           )}
 
-          {type === '6g' && (
+          {type === '5g' && (
             <div className="space-y-3">
               <div className="bg-[#27AE60]/10 rounded-lg p-3">
                 <div className="flex items-center gap-2 mb-2">
@@ -103,7 +103,7 @@ export function ConnectivityModal({ isOpen, onClose, type }: ConnectivityModalPr
 
               <div className="bg-[#F7F8FA] rounded-lg p-3">
                 <p className="text-[10px] text-[#6B7280]">
-                  Das Implantat verwendet eine integrierte 6G-eSIM für die Datenübertragung an Ihr Smartphone und medizinische Einrichtungen.
+                  Das Implantat verwendet eine integrierte 5G-eSIM für die Datenübertragung an Ihr Smartphone und medizinische Einrichtungen.
                 </p>
               </div>
             </div>

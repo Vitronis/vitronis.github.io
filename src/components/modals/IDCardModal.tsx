@@ -2,16 +2,17 @@ import { X, User, QrCode, MapPin } from 'lucide-react';
 import { useState } from 'react';
 
 interface IDCardModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
+  asPage?: boolean;
 }
 
-export function IDCardModal({ isOpen, onClose }: IDCardModalProps) {
+export function IDCardModal({ isOpen, onClose, asPage }: IDCardModalProps) {
   const [showQR, setShowQR] = useState(false);
   const [pin, setPin] = useState('');
   const correctPin = '1234'; // In production: secure handling
 
-  if (!isOpen) return null;
+  if (!asPage && !isOpen) return null;
 
   const handlePinSubmit = () => {
     if (pin === correctPin) {
@@ -22,23 +23,8 @@ export function IDCardModal({ isOpen, onClose }: IDCardModalProps) {
     }
   };
 
-  return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-[390px] w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-[#E5E7EB] p-4 flex items-center justify-between">
-          <h2 className="text-[14px] font-semibold text-[#1F2937]">
-            Medizinischer Ausweis
-          </h2>
-          <button
-            onClick={onClose}
-            className="p-1 hover:bg-[#F7F8FA] rounded-lg transition-colors"
-          >
-            <X size={20} strokeWidth={2} className="text-[#6B7280]" />
-          </button>
-        </div>
-
-        <div className="p-4 space-y-3">
+  const body = (
+    <div className="p-4 space-y-3">
           {/* ID Card */}
           <div className="bg-gradient-to-br from-[#2F80ED] to-[#1E40AF] rounded-xl p-4 text-white shadow-lg">
             <div className="flex items-start justify-between mb-3">
@@ -189,7 +175,25 @@ export function IDCardModal({ isOpen, onClose }: IDCardModalProps) {
               <span className="font-semibold">Wichtig:</span> Diese Informationen sind ausschließlich für medizinisches Fachpersonal im Notfall bestimmt.
             </p>
           </div>
+    </div>
+  );
+
+  if (asPage) return body;
+
+  return (
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl max-w-[390px] w-full max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="sticky top-0 bg-white border-b border-[#E5E7EB] p-4 flex items-center justify-between">
+          <h2 className="text-[14px] font-semibold text-[#1F2937]">Medizinischer Ausweis</h2>
+          <button
+            onClick={onClose}
+            className="p-1 hover:bg-[#F7F8FA] rounded-lg transition-colors"
+          >
+            <X size={20} strokeWidth={2} className="text-[#6B7280]" />
+          </button>
         </div>
+        {body}
       </div>
     </div>
   );

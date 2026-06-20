@@ -8,6 +8,19 @@ import { EmergencyContactModal } from '../modals/EmergencyContactModal';
 import { SettingsModal } from '../modals/SettingsModal';
 import { NFCModal } from '../modals/NFCModal';
 import { ConnectivityModal } from '../modals/ConnectivityModal';
+import { useNav } from '../../lib/nav';
+import { useEmergencyContacts } from '../../lib/profileStore';
+
+/** Full-page emergency-contacts editor; reads shared state so edits persist. */
+function EmergencyContactsPage() {
+  const { contacts, setContacts } = useEmergencyContacts();
+  return <EmergencyContactModal asPage contacts={contacts} onUpdateContacts={setContacts} />;
+}
+
+/** Full-page connectivity view for a given connection type. */
+function ConnectivityPage({ type }: { type: 'wifi' | '5g' | 'bluetooth' }) {
+  return <ConnectivityModal asPage type={type} />;
+}
 
 interface ProfileData {
   name: string;
@@ -20,13 +33,6 @@ interface ProfileData {
   doctorPractice: string;
   bloodType: string;
   medications: string;
-}
-
-interface EmergencyContact {
-  id: string;
-  name: string;
-  relation: string;
-  phone: string;
 }
 
 const inputStyle: CSSProperties = {
@@ -42,12 +48,8 @@ const inputStyle: CSSProperties = {
 
 export function Profil() {
   const [isEditing, setIsEditing] = useState(false);
-  const [showImplantStatus, setShowImplantStatus] = useState(false);
-  const [showEmergencyContacts, setShowEmergencyContacts] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
-  const [showNFC, setShowNFC] = useState(false);
-  const [showConnectivity, setShowConnectivity] = useState(false);
-  const [connectivityType, setConnectivityType] = useState<'wifi' | '5g' | 'bluetooth'>('wifi');
+  const { push } = useNav();
+  const { contacts: emergencyContacts } = useEmergencyContacts();
 
   const [profileData, setProfileData] = useState<ProfileData>({
     name: 'Max Mustermann',
@@ -64,11 +66,6 @@ export function Profil() {
 
   const [editData, setEditData] = useState<ProfileData>(profileData);
 
-  const [emergencyContacts, setEmergencyContacts] = useState<EmergencyContact[]>([
-    { id: '1', name: 'Dr. Michael Köhler', relation: 'Kardiologe', phone: '+49 30 1234567' },
-    { id: '2', name: 'Maria Mustermann', relation: 'Ehefrau', phone: '+49 170 1234567' },
-  ]);
-
   const handleSave = () => {
     setProfileData(editData);
     setIsEditing(false);
@@ -78,8 +75,8 @@ export function Profil() {
     setIsEditing(false);
   };
   const openConnectivity = (type: 'wifi' | '5g' | 'bluetooth') => {
-    setConnectivityType(type);
-    setShowConnectivity(true);
+    const title = type === 'wifi' ? 'WLAN' : type === '5g' ? '5G Mobilfunk' : 'Bluetooth';
+    push(title, <ConnectivityPage type={type} />);
   };
 
   return (
@@ -118,7 +115,7 @@ export function Profil() {
         </section>
 
         {/* Implant status */}
-        <NavCard icon={Cpu} accent="var(--brand)" title="Implantatstatus" onClick={() => setShowImplantStatus(true)}>
+        <NavCard icon={Cpu} accent="var(--brand)" title="Implantatstatus" onClick={() => push('Implantatstatus', <ImplantStatusModal asPage />)}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 6 }}>
             <span className="v-dot" style={{ background: 'var(--good)' }} />
             <span style={{ fontSize: 11, color: 'var(--good)', fontWeight: 600 }}>Alle Systeme funktionieren normal</span>
@@ -143,7 +140,7 @@ export function Profil() {
         </section>
 
         {/* Emergency contacts */}
-        <NavCard title="Notfallkontakte" onClick={() => setShowEmergencyContacts(true)}>
+        <NavCard title="Notfallkontakte" onClick={() => push('Notfallkontakte verwalten', <EmergencyContactsPage />)}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 10 }}>
             {emergencyContacts.slice(0, 2).map((c) => (
               <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -185,8 +182,8 @@ export function Profil() {
         </section>
 
         {/* Settings + NFC */}
-        <NavCard icon={Settings} accent="var(--brand)" title="Einstellungen" subtitle="Verbindungen & Sprache" onClick={() => setShowSettings(true)} />
-        <NavCard icon={Nfc} accent="var(--brand)" title="NFC" subtitle="Wallet & Ausweise verwalten" onClick={() => setShowNFC(true)} />
+        <NavCard icon={Settings} accent="var(--brand)" title="Einstellungen" subtitle="Verbindungen & Sprache" onClick={() => push('Einstellungen', <SettingsModal asPage />)} />
+        <NavCard icon={Nfc} accent="var(--brand)" title="NFC" subtitle="Wallet & Ausweise verwalten" onClick={() => push('NFC', <NFCModal asPage />)} />
 
         {/* Save / cancel */}
         {isEditing && (
@@ -209,11 +206,6 @@ export function Profil() {
         )}
       </div>
 
-      <ImplantStatusModal isOpen={showImplantStatus} onClose={() => setShowImplantStatus(false)} />
-      <EmergencyContactModal isOpen={showEmergencyContacts} onClose={() => setShowEmergencyContacts(false)} contacts={emergencyContacts} onUpdateContacts={setEmergencyContacts} />
-      <SettingsModal isOpen={showSettings} onClose={() => setShowSettings(false)} />
-      <NFCModal isOpen={showNFC} onClose={() => setShowNFC(false)} />
-      <ConnectivityModal isOpen={showConnectivity} onClose={() => setShowConnectivity(false)} type={connectivityType} />
     </>
   );
 }

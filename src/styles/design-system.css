@@ -288,6 +288,38 @@
   box-shadow: 0 6px 16px rgba(46, 107, 255, 0.4);
 }
 
+/* ---- Sliding pages (in-frame push/pop navigation) ---------------------- */
+/* A page covers the frame, sits above the current tab screen but below the
+   floating bottom nav (z-index 50), and slides in from the right. */
+.v-page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(130% 90% at 100% -10%, var(--glow-1), transparent 55%),
+    radial-gradient(120% 85% at -15% 110%, var(--glow-2), transparent 55%),
+    linear-gradient(180deg, var(--bg), var(--bg-2));
+  will-change: transform;
+}
+.v-page-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 110px; /* clear the floating bottom nav */
+}
+@keyframes v-slide-in {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@keyframes v-slide-out {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+.v-page-enter { animation: v-slide-in 0.26s cubic-bezier(0.32, 0.72, 0, 1) both; }
+.v-page-exit { animation: v-slide-out 0.24s cubic-bezier(0.32, 0.72, 0, 1) both; }
+
 /* ---- Theme transition on toggle ---------------------------------------- */
 @keyframes v-fade-in {
   from { opacity: 0; transform: translateY(6px); }

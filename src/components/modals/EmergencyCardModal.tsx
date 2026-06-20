@@ -1,30 +1,16 @@
 import { X, User, Droplet, Calendar, AlertCircle, Phone } from 'lucide-react';
 
 interface EmergencyCardModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
+  asPage?: boolean;
 }
 
-export function EmergencyCardModal({ isOpen, onClose }: EmergencyCardModalProps) {
-  if (!isOpen) return null;
+export function EmergencyCardModal({ isOpen, onClose, asPage }: EmergencyCardModalProps) {
+  if (!asPage && !isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-[390px] w-full">
-        {/* Header */}
-        <div className="bg-[#EB5757] rounded-t-2xl p-4 flex items-center justify-between">
-          <h2 className="text-[14px] font-semibold text-white">
-            Notfallinformationen
-          </h2>
-          <button
-            onClick={onClose}
-            className="p-1 hover:bg-white/20 rounded-lg transition-colors"
-          >
-            <X size={20} strokeWidth={2} className="text-white" />
-          </button>
-        </div>
-
-        <div className="p-4 space-y-3">
+  const body = (
+    <div className="p-4 space-y-3">
           {/* Emergency Card */}
           <div className="bg-gradient-to-br from-[#EB5757] to-[#DC2626] rounded-xl p-4 text-white shadow-lg">
             <div className="flex items-center justify-between mb-4">
@@ -110,7 +96,25 @@ export function EmergencyCardModal({ isOpen, onClose }: EmergencyCardModalProps)
               Bei lebensbedrohlichen Situationen sofort den Rettungsdienst kontaktieren
             </p>
           </div>
+    </div>
+  );
+
+  if (asPage) return body;
+
+  return (
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl max-w-[390px] w-full">
+        {/* Header */}
+        <div className="bg-[#EB5757] rounded-t-2xl p-4 flex items-center justify-between">
+          <h2 className="text-[14px] font-semibold text-white">Notfallinformationen</h2>
+          <button
+            onClick={onClose}
+            className="p-1 hover:bg-white/20 rounded-lg transition-colors"
+          >
+            <X size={20} strokeWidth={2} className="text-white" />
+          </button>
         </div>
+        {body}
       </div>
     </div>
   );

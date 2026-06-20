@@ -8,6 +8,7 @@ import { Notfall } from './components/screens/Notfall';
 import { Profil } from './components/screens/Profil';
 import { AlertSystem } from './components/AlertSystem';
 import { DemoControl } from './components/DemoControl';
+import { PageHost, useNav } from './lib/nav';
 import { Toaster } from 'sonner@2.0.3';
 
 type Screen = 'home' | 'verlauf' | 'notfall' | 'profil' | 'vital-detail';
@@ -16,6 +17,13 @@ type VitalType = 'heart' | 'blood-pressure' | 'oxygen' | 'temperature' | 'ekg' |
 function App() {
   const [currentScreen, setCurrentScreen] = useState<Screen>('home');
   const [selectedVital, setSelectedVital] = useState<VitalType | null>(null);
+  const { reset } = useNav();
+
+  // Tapping a bottom-nav tab closes any open page and switches tab.
+  const navigateTab = (screen: Screen) => {
+    reset();
+    setCurrentScreen(screen);
+  };
 
   const handleBack = () => {
     if (currentScreen === 'vital-detail') {
@@ -74,11 +82,14 @@ function App() {
           </main>
         </div>
 
-        {/* Bottom Navigation (anchored to the frame) */}
+        {/* Sliding pages (push/pop navigation, above content, below nav) */}
+        <PageHost />
+
+        {/* Bottom Navigation (anchored to the frame, stays visible over pages) */}
         {currentScreen !== 'vital-detail' && (
           <BottomNavigation
             activeScreen={currentScreen === 'vital-detail' ? 'verlauf' : currentScreen}
-            onNavigate={setCurrentScreen}
+            onNavigate={navigateTab}
           />
         )}
 

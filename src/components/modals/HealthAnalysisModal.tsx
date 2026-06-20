@@ -4,9 +4,11 @@ import { useVitals, detectPattern, VitalType, VITAL_LABELS, Status } from '../..
 import { VITAL_COLOR, STATUS_VAR } from '../../lib/theme';
 
 interface HealthAnalysisModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
   source: 'dashboard' | 'verlauf';
+  /** Render as a full in-frame page (no overlay / own header) instead of a modal. */
+  asPage?: boolean;
 }
 
 const STATUS_LABEL: Record<Status, string> = { normal: 'Normal', warning: 'Auffällig', emergency: 'Kritisch' };
@@ -37,10 +39,10 @@ const RECS = [
   { title: 'Stressmanagement', items: ['10–15 Min. Meditation', '7–8 Stunden Schlaf'] },
 ];
 
-export function HealthAnalysisModal({ isOpen, onClose, source }: HealthAnalysisModalProps) {
+export function HealthAnalysisModal({ isOpen, onClose, source, asPage }: HealthAnalysisModalProps) {
   const [showRecs, setShowRecs] = useState(false);
   const ctx = useVitals();
-  if (!isOpen) return null;
+  if (!asPage && !isOpen) return null;
 
   const { vitals } = ctx;
   const pattern = detectPattern(ctx);
@@ -56,32 +58,15 @@ export function HealthAnalysisModal({ isOpen, onClose, source }: HealthAnalysisM
     display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
   };
 
-  return (
-    <div style={overlay} onClick={onClose}>
-      <div
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          background: 'var(--surface)', color: 'var(--text)', width: '100%', maxWidth: 390,
-          maxHeight: '88vh', borderRadius: 24, display: 'flex', flexDirection: 'column',
-          overflow: 'hidden', boxShadow: 'var(--shadow-pop)', border: '1px solid var(--border)',
-        }}
-      >
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
-          <div>
-            <p style={{ fontSize: 15, fontWeight: 700 }}>Gesundheitsanalyse</p>
-            <p style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 2 }}>
-              {source === 'dashboard' ? 'Aktuelle Werte' : 'Verlaufsdaten'} · {lastUpdated}
-            </p>
-          </div>
-          <button className="v-icon-btn" onClick={onClose} aria-label="Schließen">
-            <X size={18} strokeWidth={2.2} />
-          </button>
-        </div>
+  const meta = (
+    <p style={{ fontSize: 10, color: 'var(--text-muted)' }}>
+      {source === 'dashboard' ? 'Aktuelle Werte' : 'Verlaufsdaten'} · {lastUpdated}
+    </p>
+  );
 
-        {/* Scrollable body */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: 16, paddingBottom: 28, display: 'flex', flexDirection: 'column', gap: 14 }}>
-          {/* Overall status */}
+  const body = (
+    <>
+      {/* Overall status */}
           <div style={{ borderRadius: 16, padding: 14, background: `color-mix(in srgb, ${patternColor} 12%, transparent)` }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ width: 9, height: 9, borderRadius: 9999, background: patternColor }} />
@@ -158,10 +143,46 @@ export function HealthAnalysisModal({ isOpen, onClose, source }: HealthAnalysisM
             )}
           </div>
 
-          {/* Disclaimer */}
-          <p style={{ fontSize: 10, color: 'var(--text-faint)', lineHeight: 1.5, textAlign: 'center' }}>
-            Diese Analyse ersetzt keine ärztliche Diagnose. Bei Beschwerden wenden Sie sich an Ihren Arzt.
-          </p>
+      {/* Disclaimer */}
+      <p style={{ fontSize: 10, color: 'var(--text-faint)', lineHeight: 1.5, textAlign: 'center' }}>
+        Diese Analyse ersetzt keine ärztliche Diagnose. Bei Beschwerden wenden Sie sich an Ihren Arzt.
+      </p>
+    </>
+  );
+
+  if (asPage) {
+    return (
+      <div style={{ padding: '8px 16px 16px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+        {meta}
+        {body}
+      </div>
+    );
+  }
+
+  return (
+    <div style={overlay} onClick={onClose}>
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          background: 'var(--surface)', color: 'var(--text)', width: '100%', maxWidth: 390,
+          maxHeight: '88vh', borderRadius: 24, display: 'flex', flexDirection: 'column',
+          overflow: 'hidden', boxShadow: 'var(--shadow-pop)', border: '1px solid var(--border)',
+        }}
+      >
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
+          <div>
+            <p style={{ fontSize: 15, fontWeight: 700 }}>Gesundheitsanalyse</p>
+            {meta}
+          </div>
+          <button className="v-icon-btn" onClick={onClose} aria-label="Schließen">
+            <X size={18} strokeWidth={2.2} />
+          </button>
+        </div>
+
+        {/* Scrollable body */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: 16, paddingBottom: 28, display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {body}
         </div>
       </div>
     </div>

@@ -1,9 +1,9 @@
 import { Phone, CreditCard, ShieldAlert, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
 import { IDCardModal } from '../modals/IDCardModal';
+import { useNav } from '../../lib/nav';
 
 export function Notfall() {
-  const [showIDCard, setShowIDCard] = useState(false);
+  const { push } = useNav();
 
   return (
     <>
@@ -62,7 +62,7 @@ export function Notfall() {
         {/* Medical ID */}
         <button
           className="v-card-soft v-pressable"
-          onClick={() => setShowIDCard(true)}
+          onClick={() => push('Medizinischer Ausweis', <IDCardModal asPage />)}
           style={{ padding: 14, display: 'flex', alignItems: 'center', gap: 12, width: '100%', textAlign: 'left' }}
         >
           <div className="v-chip" style={{ background: 'color-mix(in srgb, var(--brand) 16%, transparent)', color: 'var(--brand)' }}>
@@ -90,8 +90,6 @@ export function Notfall() {
           </p>
         </div>
       </div>
-
-      <IDCardModal isOpen={showIDCard} onClose={() => setShowIDCard(false)} />
     </>
   );
 }

@@ -9,18 +9,19 @@ interface EmergencyContact {
 }
 
 interface EmergencyContactModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
   contacts: EmergencyContact[];
   onUpdateContacts: (contacts: EmergencyContact[]) => void;
+  asPage?: boolean;
 }
 
-export function EmergencyContactModal({ isOpen, onClose, contacts, onUpdateContacts }: EmergencyContactModalProps) {
+export function EmergencyContactModal({ isOpen, onClose, contacts, onUpdateContacts, asPage }: EmergencyContactModalProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [editForm, setEditForm] = useState({ name: '', relation: '', phone: '' });
 
-  if (!isOpen) return null;
+  if (!asPage && !isOpen) return null;
 
   const handleStartEdit = (contact: EmergencyContact) => {
     setEditingId(contact.id);
@@ -51,23 +52,8 @@ export function EmergencyContactModal({ isOpen, onClose, contacts, onUpdateConta
     }
   };
 
-  return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-[390px] w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-[#E5E7EB] p-4 flex items-center justify-between">
-          <h2 className="text-[14px] font-semibold text-[#1F2937]">
-            Notfallkontakte verwalten
-          </h2>
-          <button
-            onClick={onClose}
-            className="p-1 hover:bg-[#F7F8FA] rounded-lg transition-colors"
-          >
-            <X size={20} strokeWidth={2} className="text-[#6B7280]" />
-          </button>
-        </div>
-
-        <div className="p-4 space-y-3">
+  const body = (
+    <div className="p-4 space-y-3">
           {/* Existing Contacts */}
           {contacts.map((contact) => (
             <div key={contact.id} className="bg-[#F7F8FA] rounded-xl p-3">
@@ -197,7 +183,25 @@ export function EmergencyContactModal({ isOpen, onClose, contacts, onUpdateConta
               <span className="font-medium">Hinweis:</span> Diese Kontakte werden im Notfall automatisch benachrichtigt und haben Zugriff auf Ihre medizinischen Daten.
             </p>
           </div>
+    </div>
+  );
+
+  if (asPage) return body;
+
+  return (
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl max-w-[390px] w-full max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="sticky top-0 bg-white border-b border-[#E5E7EB] p-4 flex items-center justify-between">
+          <h2 className="text-[14px] font-semibold text-[#1F2937]">Notfallkontakte verwalten</h2>
+          <button
+            onClick={onClose}
+            className="p-1 hover:bg-[#F7F8FA] rounded-lg transition-colors"
+          >
+            <X size={20} strokeWidth={2} className="text-[#6B7280]" />
+          </button>
         </div>
+        {body}
       </div>
     </div>
   );

@@ -3,8 +3,9 @@ import { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 
 interface ImplantStatusModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
+  asPage?: boolean;
 }
 
 const batteryData24h = [
@@ -66,32 +67,17 @@ const chipParts: ChipPart[] = [
   { id: '8', name: 'Verschlüsselung', status: 'ok', angle: 315 },
 ];
 
-export function ImplantStatusModal({ isOpen, onClose }: ImplantStatusModalProps) {
+export function ImplantStatusModal({ isOpen, onClose, asPage }: ImplantStatusModalProps) {
   const [timeRange, setTimeRange] = useState<'24h' | '7d'>('24h');
   const [selectedPart, setSelectedPart] = useState<ChipPart | null>(null);
   const [zoomLevel, setZoomLevel] = useState(1);
 
-  if (!isOpen) return null;
+  if (!asPage && !isOpen) return null;
 
   const batteryPercentage = 94;
 
-  return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-[390px] w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-[#E5E7EB] p-4 flex items-center justify-between">
-          <h2 className="text-[14px] font-semibold text-[#1F2937]">
-            Implantatstatus
-          </h2>
-          <button
-            onClick={onClose}
-            className="p-1 hover:bg-[#F7F8FA] rounded-lg transition-colors"
-          >
-            <X size={20} strokeWidth={2} className="text-[#6B7280]" />
-          </button>
-        </div>
-
-        <div className="p-4 space-y-3">
+  const body = (
+    <div className="p-4 space-y-3">
           {/* Battery Status */}
           <div className="bg-white border border-[#E5E7EB] rounded-lg p-3">
             <div className="flex items-center gap-2 mb-3">
@@ -355,7 +341,25 @@ export function ImplantStatusModal({ isOpen, onClose }: ImplantStatusModalProps)
               Support-Hotline: +49 (0) 800 123 4567 • 24/7 verfügbar
             </p>
           </div>
+    </div>
+  );
+
+  if (asPage) return body;
+
+  return (
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl max-w-[390px] w-full max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="sticky top-0 bg-white border-b border-[#E5E7EB] p-4 flex items-center justify-between">
+          <h2 className="text-[14px] font-semibold text-[#1F2937]">Implantatstatus</h2>
+          <button
+            onClick={onClose}
+            className="p-1 hover:bg-[#F7F8FA] rounded-lg transition-colors"
+          >
+            <X size={20} strokeWidth={2} className="text-[#6B7280]" />
+          </button>
         </div>
+        {body}
       </div>
     </div>
   );

@@ -19,11 +19,12 @@ interface IDDocument {
 }
 
 interface NFCModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
+  asPage?: boolean;
 }
 
-export function NFCModal({ isOpen, onClose }: NFCModalProps) {
+export function NFCModal({ isOpen, onClose, asPage }: NFCModalProps) {
   const [activeTab, setActiveTab] = useState<'wallet' | 'ids'>('wallet');
   const [showChipConnection, setShowChipConnection] = useState(false);
   const [connectionTarget, setConnectionTarget] = useState<'wallet' | 'ids'>('wallet');
@@ -42,7 +43,7 @@ export function NFCModal({ isOpen, onClose }: NFCModalProps) {
   const [cardForm, setCardForm] = useState({ type: 'Visa', number: '', holder: '' });
   const [idForm, setIdForm] = useState({ type: 'Personalausweis', number: '', name: '' });
 
-  if (!isOpen) return null;
+  if (!asPage && !isOpen) return null;
 
   const handleAddCard = () => {
     if (cardForm.number && cardForm.holder) {
@@ -95,50 +96,33 @@ export function NFCModal({ isOpen, onClose }: NFCModalProps) {
   const hasUnsyncedCards = cards.some(c => !c.synced);
   const hasUnsyncedIDs = ids.some(i => !i.synced);
 
-  return (
-    <>
-      <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl max-w-[390px] w-full max-h-[90vh] overflow-y-auto">
-          {/* Header */}
-          <div className="sticky top-0 bg-white border-b border-[#E5E7EB] p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-[14px] font-semibold text-[#1F2937]">
-                NFC Verwaltung
-              </h2>
-              <button
-                onClick={onClose}
-                className="p-1 hover:bg-[#F7F8FA] rounded-lg transition-colors"
-              >
-                <X size={20} strokeWidth={2} className="text-[#6B7280]" />
-              </button>
-            </div>
+  const tabs = (
+    <div className="flex gap-1.5 p-1 bg-[#F7F8FA] rounded-lg">
+      <button
+        onClick={() => setActiveTab('wallet')}
+        className={`flex-1 px-3 py-1.5 text-[11px] font-medium rounded-md transition-colors ${
+          activeTab === 'wallet'
+            ? 'bg-white text-[#2F80ED] shadow-sm'
+            : 'text-[#6B7280]'
+        }`}
+      >
+        Wallet
+      </button>
+      <button
+        onClick={() => setActiveTab('ids')}
+        className={`flex-1 px-3 py-1.5 text-[11px] font-medium rounded-md transition-colors ${
+          activeTab === 'ids'
+            ? 'bg-white text-[#2F80ED] shadow-sm'
+            : 'text-[#6B7280]'
+        }`}
+      >
+        Ausweise
+      </button>
+    </div>
+  );
 
-            {/* Tabs */}
-            <div className="flex gap-1.5 p-1 bg-[#F7F8FA] rounded-lg">
-              <button
-                onClick={() => setActiveTab('wallet')}
-                className={`flex-1 px-3 py-1.5 text-[11px] font-medium rounded-md transition-colors ${
-                  activeTab === 'wallet'
-                    ? 'bg-white text-[#2F80ED] shadow-sm'
-                    : 'text-[#6B7280]'
-                }`}
-              >
-                Wallet
-              </button>
-              <button
-                onClick={() => setActiveTab('ids')}
-                className={`flex-1 px-3 py-1.5 text-[11px] font-medium rounded-md transition-colors ${
-                  activeTab === 'ids'
-                    ? 'bg-white text-[#2F80ED] shadow-sm'
-                    : 'text-[#6B7280]'
-                }`}
-              >
-                Ausweise
-              </button>
-            </div>
-          </div>
-
-          <div className="p-4">
+  const body = (
+    <div className="p-4">
             {activeTab === 'wallet' ? (
               <div className="space-y-3">
                 {/* Wallet App Link */}
@@ -366,17 +350,49 @@ export function NFCModal({ isOpen, onClose }: NFCModalProps) {
                 <span className="font-medium">Sicherheitshinweis:</span> Ihre Daten werden verschlüsselt auf dem NFC-Chip gespeichert. Halten Sie Ihr Handy an den Chip, um die Synchronisierung zu starten.
               </p>
             </div>
+    </div>
+  );
+
+  const chip = (
+    <ChipConnectionModal
+      isOpen={showChipConnection}
+      onClose={() => setShowChipConnection(false)}
+      onComplete={handleSyncComplete}
+      type={connectionTarget}
+    />
+  );
+
+  if (asPage) {
+    return (
+      <>
+        <div className="px-4 pt-4">{tabs}</div>
+        {body}
+        {chip}
+      </>
+    );
+  }
+
+  return (
+    <>
+      <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl max-w-[390px] w-full max-h-[90vh] overflow-y-auto">
+          {/* Header */}
+          <div className="sticky top-0 bg-white border-b border-[#E5E7EB] p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-[14px] font-semibold text-[#1F2937]">NFC Verwaltung</h2>
+              <button
+                onClick={onClose}
+                className="p-1 hover:bg-[#F7F8FA] rounded-lg transition-colors"
+              >
+                <X size={20} strokeWidth={2} className="text-[#6B7280]" />
+              </button>
+            </div>
+            {tabs}
           </div>
+          {body}
         </div>
       </div>
-
-      {/* Chip Connection Modal */}
-      <ChipConnectionModal
-        isOpen={showChipConnection}
-        onClose={() => setShowChipConnection(false)}
-        onComplete={handleSyncComplete}
-        type={connectionTarget}
-      />
+      {chip}
     </>
   );
 }

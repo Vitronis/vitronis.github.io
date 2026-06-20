@@ -2,6 +2,7 @@ import { Heart, Activity, Thermometer, Droplet, TrendingUp, Zap, Flame, Droplets
 import { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 import { HealthAnalysisModal } from '../modals/HealthAnalysisModal';
+import { useNav } from '../../lib/nav';
 
 const hrData24h = [
   { time: '00:00', value: 54 },
@@ -941,8 +942,11 @@ interface VerlaufProps {
 
 export function Verlauf({ onVitalClick }: VerlaufProps) {
   const [timeRange, setTimeRange] = useState<'24h' | '7d'>('7d');
-  const [showAnalysis, setShowAnalysis] = useState(false);
   const is24 = timeRange === '24h';
+  const { push } = useNav();
+
+  const openAnalysis = () =>
+    push('Gesundheitsanalyse', <HealthAnalysisModal asPage source="verlauf" />);
 
   return (
     <div className="v-screen">
@@ -955,7 +959,7 @@ export function Verlauf({ onVitalClick }: VerlaufProps) {
       {/* Analysis button */}
       <button
         className="v-card v-pressable"
-        onClick={() => setShowAnalysis(true)}
+        onClick={openAnalysis}
         style={{ padding: 14, display: 'flex', alignItems: 'center', gap: 10, justifyContent: 'center', width: '100%' }}
       >
         <TrendingUp size={16} strokeWidth={2.4} style={{ color: 'var(--brand)' }} />
@@ -973,7 +977,6 @@ export function Verlauf({ onVitalClick }: VerlaufProps) {
         <ChartCard icon={Droplet} title="Blutzuckergehalt" data={is24 ? bloodSugarData24h : bloodSugarData7d} dataKeys={['value']} accent={VITAL_COLOR['blood-sugar']} unit=" mg/dL" onClick={() => onVitalClick('blood-sugar')} />
       </div>
 
-      <HealthAnalysisModal isOpen={showAnalysis} onClose={() => setShowAnalysis(false)} source="verlauf" />
     </div>
   );
 }

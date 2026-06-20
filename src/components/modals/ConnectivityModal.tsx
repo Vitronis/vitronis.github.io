@@ -2,16 +2,17 @@ import { X, Wifi, Signal, Bluetooth, CheckCircle } from 'lucide-react';
 import { useState } from 'react';
 
 interface ConnectivityModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
   type: 'wifi' | '5g' | 'bluetooth';
+  asPage?: boolean;
 }
 
-export function ConnectivityModal({ isOpen, onClose, type }: ConnectivityModalProps) {
+export function ConnectivityModal({ isOpen, onClose, type, asPage }: ConnectivityModalProps) {
   const [selectedWifi, setSelectedWifi] = useState<string | null>('Home-Network');
   const [bluetoothConnected, setBluetoothConnected] = useState(true);
 
-  if (!isOpen) return null;
+  if (!asPage && !isOpen) return null;
 
   const wifiNetworks = [
     { name: 'Home-Network', strength: 'Stark', secured: true },
@@ -19,25 +20,10 @@ export function ConnectivityModal({ isOpen, onClose, type }: ConnectivityModalPr
     { name: 'Guest-Network', strength: 'Schwach', secured: false },
   ];
 
-  return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-[390px] w-full max-h-[80vh] overflow-y-auto">
-        {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-[#E5E7EB] p-4 flex items-center justify-between">
-          <h2 className="text-[14px] font-semibold text-[#1F2937]">
-            {type === 'wifi' && 'WLAN'}
-            {type === '5g' && '5G Mobilfunk'}
-            {type === 'bluetooth' && 'Bluetooth'}
-          </h2>
-          <button
-            onClick={onClose}
-            className="p-1 hover:bg-[#F7F8FA] rounded-lg transition-colors"
-          >
-            <X size={20} strokeWidth={2} className="text-[#6B7280]" />
-          </button>
-        </div>
+  const title = type === 'wifi' ? 'WLAN' : type === '5g' ? '5G Mobilfunk' : 'Bluetooth';
 
-        <div className="p-4 space-y-3">
+  const body = (
+    <div className="p-4 space-y-3">
           {type === 'wifi' && (
             <>
               <p className="text-[11px] text-[#6B7280]">
@@ -146,7 +132,25 @@ export function ConnectivityModal({ isOpen, onClose, type }: ConnectivityModalPr
               </div>
             </div>
           )}
+    </div>
+  );
+
+  if (asPage) return body;
+
+  return (
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl max-w-[390px] w-full max-h-[80vh] overflow-y-auto">
+        {/* Header */}
+        <div className="sticky top-0 bg-white border-b border-[#E5E7EB] p-4 flex items-center justify-between">
+          <h2 className="text-[14px] font-semibold text-[#1F2937]">{title}</h2>
+          <button
+            onClick={onClose}
+            className="p-1 hover:bg-[#F7F8FA] rounded-lg transition-colors"
+          >
+            <X size={20} strokeWidth={2} className="text-[#6B7280]" />
+          </button>
         </div>
+        {body}
       </div>
     </div>
   );

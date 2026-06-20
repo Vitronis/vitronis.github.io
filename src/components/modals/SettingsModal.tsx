@@ -2,17 +2,18 @@ import { X, Cloud, Languages, Check, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 
 interface SettingsModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
+  asPage?: boolean;
 }
 
-export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
+export function SettingsModal({ isOpen, onClose, asPage }: SettingsModalProps) {
   const [iCloudConnected, setICloudConnected] = useState(false);
   const [microsoftConnected, setMicrosoftConnected] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('de');
   const [showLanguages, setShowLanguages] = useState(false);
 
-  if (!isOpen) return null;
+  if (!asPage && !isOpen) return null;
 
   const languages = [
     { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
@@ -24,23 +25,8 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
   const currentLanguage = languages.find(l => l.code === selectedLanguage);
 
-  return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-[390px] w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-[#E5E7EB] p-4 flex items-center justify-between">
-          <h2 className="text-[14px] font-semibold text-[#1F2937]">
-            Einstellungen
-          </h2>
-          <button
-            onClick={onClose}
-            className="p-1 hover:bg-[#F7F8FA] rounded-lg transition-colors"
-          >
-            <X size={20} strokeWidth={2} className="text-[#6B7280]" />
-          </button>
-        </div>
-
-        <div className="p-4 space-y-4">
+  const body = (
+    <div className="p-4 space-y-4">
           {/* Verbindungen Section */}
           <div>
             <h3 className="text-[12px] font-medium text-[#1F2937] mb-3">
@@ -217,6 +203,24 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             </div>
           </div>
         </div>
+  );
+
+  if (asPage) return body;
+
+  return (
+    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl max-w-[390px] w-full max-h-[90vh] overflow-y-auto">
+        {/* Header */}
+        <div className="sticky top-0 bg-white border-b border-[#E5E7EB] p-4 flex items-center justify-between">
+          <h2 className="text-[14px] font-semibold text-[#1F2937]">Einstellungen</h2>
+          <button
+            onClick={onClose}
+            className="p-1 hover:bg-[#F7F8FA] rounded-lg transition-colors"
+          >
+            <X size={20} strokeWidth={2} className="text-[#6B7280]" />
+          </button>
+        </div>
+        {body}
       </div>
     </div>
   );

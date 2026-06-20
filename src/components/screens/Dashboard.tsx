@@ -1,10 +1,10 @@
 import { Heart, Activity, Droplet, Thermometer, Cpu, AlertTriangle, Sparkles, ChevronRight } from 'lucide-react';
 import { VitalCard } from '../VitalCard';
-import { useState } from 'react';
 import { HealthAnalysisModal } from '../modals/HealthAnalysisModal';
 import { ImplantStatusModal } from '../modals/ImplantStatusModal';
 import { EmergencyCardModal } from '../modals/EmergencyCardModal';
 import { useVitals, detectPattern, Status } from '../../lib/vitals';
+import { useNav } from '../../lib/nav';
 import { VITAL_COLOR } from '../../lib/theme';
 import logo from '../../assets/vitronis-logo.png';
 
@@ -23,12 +23,17 @@ function spark(values: { value: number }[], n = 24): number[] {
 }
 
 export function Dashboard({ onVitalClick }: DashboardProps) {
-  const [showAnalysis, setShowAnalysis] = useState(false);
-  const [showImplantStatus, setShowImplantStatus] = useState(false);
-  const [showEmergencyCard, setShowEmergencyCard] = useState(false);
   const ctx = useVitals();
   const { vitals } = ctx;
   const pattern = detectPattern(ctx);
+  const { push } = useNav();
+
+  const openAnalysis = () =>
+    push('Gesundheitsanalyse', <HealthAnalysisModal asPage source="dashboard" />);
+  const openImplantStatus = () =>
+    push('Implantatstatus', <ImplantStatusModal asPage />);
+  const openEmergencyCard = () =>
+    push('Notfallinformationen', <EmergencyCardModal asPage />);
 
   return (
     <div className="v-screen">
@@ -118,7 +123,7 @@ export function Dashboard({ onVitalClick }: DashboardProps) {
       {/* AI analysis */}
       <button
         className="v-card v-pressable"
-        onClick={() => setShowAnalysis(true)}
+        onClick={openAnalysis}
         style={{ padding: 16, textAlign: 'left', display: 'flex', gap: 12, alignItems: 'center', width: '100%' }}
       >
         <div className="v-chip" style={{ background: 'var(--brand)', color: '#fff' }}>
@@ -138,20 +143,17 @@ export function Dashboard({ onVitalClick }: DashboardProps) {
           accent="var(--brand)"
           title="Implantatstatus"
           subtitle="Alle Systeme funktionieren normal"
-          onClick={() => setShowImplantStatus(true)}
+          onClick={openImplantStatus}
         />
         <ActionRow
           icon={AlertTriangle}
           accent="var(--bad)"
           title="Notfallinformationen"
           subtitle="Schneller Zugriff auf wichtige Daten"
-          onClick={() => setShowEmergencyCard(true)}
+          onClick={openEmergencyCard}
         />
       </div>
 
-      <HealthAnalysisModal isOpen={showAnalysis} onClose={() => setShowAnalysis(false)} source="dashboard" />
-      <ImplantStatusModal isOpen={showImplantStatus} onClose={() => setShowImplantStatus(false)} />
-      <EmergencyCardModal isOpen={showEmergencyCard} onClose={() => setShowEmergencyCard(false)} />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { X, User, QrCode, MapPin } from 'lucide-react';
+import { X, User, QrCode, ExternalLink } from 'lucide-react';
 import { useState } from 'react';
 
 interface IDCardModalProps {
@@ -52,19 +52,27 @@ export function IDCardModal({ isOpen, onClose, asPage }: IDCardModalProps) {
             <div className="space-y-2 text-[11px]">
               <div className="flex justify-between">
                 <span className="text-[#6B7280]">Geburtsdatum:</span>
-                <span className="text-[#1F2937]">15. März 1985</span>
+                <span className="text-[#1F2937]">12. April 1990</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-[#6B7280]">Alter:</span>
-                <span className="text-[#1F2937]">40 Jahre</span>
+                <span className="text-[#1F2937]">36 Jahre</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-[#6B7280]">Größe:</span>
-                <span className="text-[#1F2937]">178 cm</span>
+                <span className="text-[#1F2937]">180 cm</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-[#6B7280]">Gewicht:</span>
-                <span className="text-[#1F2937]">82 kg</span>
+                <span className="text-[#1F2937]">75 kg</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[#6B7280]">Adresse:</span>
+                <span className="text-[#1F2937] text-right">Musterstraße 1,<br />83278 Traunstein</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[#6B7280]">Telefon:</span>
+                <span className="text-[#1F2937]">+49 151 23456789</span>
               </div>
             </div>
           </div>
@@ -81,43 +89,38 @@ export function IDCardModal({ isOpen, onClose, asPage }: IDCardModalProps) {
               </div>
               <div>
                 <p className="text-[10px] text-[#6B7280]">Allergien</p>
-                <p className="text-[11px] text-[#1F2937]">Penicillin</p>
+                <p className="text-[11px] text-[#1F2937]">Penicillin, Latex</p>
               </div>
               <div>
                 <p className="text-[10px] text-[#6B7280]">Vorerkrankungen</p>
                 <div className="space-y-1 mt-1">
                   <div className="flex items-center gap-1.5">
                     <div className="w-1 h-1 rounded-full bg-[#EB5757]" />
-                    <span className="text-[11px] text-[#1F2937]">Diabetes Typ 2</span>
+                    <span className="text-[11px] text-[#1F2937]">Diabetes Typ 1</span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <div className="w-1 h-1 rounded-full bg-[#EB5757]" />
-                    <span className="text-[11px] text-[#1F2937]">Hypertonie</span>
+                    <span className="text-[11px] text-[#1F2937]">Asthma bronchiale</span>
                   </div>
                 </div>
               </div>
               <div>
                 <p className="text-[10px] text-[#6B7280]">Medikamente</p>
-                <p className="text-[11px] text-[#1F2937]">Metformin 500mg, Ramipril 5mg</p>
+                <p className="text-[11px] text-[#1F2937]">Marcumar, Insulin (Lantus)</p>
               </div>
             </div>
           </div>
 
-          {/* Location Map Placeholder */}
-          <div className="bg-[#F7F8FA] rounded-lg p-3">
-            <div className="flex items-center gap-2 mb-2">
-              <MapPin size={14} strokeWidth={2} className="text-[#2F80ED]" />
-              <h4 className="text-[11px] font-medium text-[#1F2937]">
-                Standort
-              </h4>
-            </div>
-            <div className="bg-[#E5E7EB] rounded-lg h-32 flex items-center justify-center">
-              <p className="text-[10px] text-[#6B7280]">Karte wird geladen...</p>
-            </div>
-            <p className="text-[9px] text-[#6B7280] mt-1">
-              Berlin, Deutschland
-            </p>
-          </div>
+          {/* Vitaldaten Link */}
+          <a
+            href="https://sos.vitronis.de"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 w-full bg-[#2F80ED] hover:bg-[#2563EB] active:bg-[#1D4ED8] transition-colors rounded-xl py-4 text-white font-semibold text-[14px] shadow-md"
+          >
+            <ExternalLink size={16} strokeWidth={2} />
+            Weitere Vitaldaten einsehen
+          </a>
 
           {/* QR Code Section */}
           <div className="bg-white border border-[#E5E7EB] rounded-lg p-3">
